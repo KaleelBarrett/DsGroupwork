@@ -1,8 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
-#include <cstdlib>  // For srand() and rand()
-#include <ctime>    // For time()
 
 using namespace std;
 
