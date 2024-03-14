@@ -6,12 +6,6 @@
 
 using namespace std;
 
-// Define a structure to hold question-answer pairs
-struct QuestionAnswer {
-    string question;
-    string answer;
-};
-
 class Player {
 private:
     string Playername;
