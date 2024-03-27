@@ -153,7 +153,7 @@ public:
 
     // Function to display player information
     void displayInfo() {
-        cout << "\nPlayers Information:" << endl;
+        cout << "\nPlayerrs Information:" << endl;
         Node* current = head;
         while (current != nullptr) {
             Player* currentPlayer = &current->data;
