@@ -14,6 +14,8 @@ private:
 	Node* nextNode;
 	//Node* prevNode;
 
+
+
 public:
 
 	Node() {
@@ -21,6 +23,8 @@ public:
 		nextNode = NULL;
 		//prevNode = NULL;
 	}
+
+	Node(Player data, Node* nextNode = nullptr);
 
 	Node* getNextNode() {
 
@@ -47,6 +51,7 @@ public:
 		this->data = data;
 	}
 
+	void display();
 };
 
 #endif
