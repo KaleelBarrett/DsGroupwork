@@ -19,6 +19,7 @@ public:
     void spin();
 
     Card getCurrentCard();
+
 };
 
 #endif // WHEEL_H

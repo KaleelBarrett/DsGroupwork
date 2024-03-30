@@ -1,6 +1,5 @@
 // CardNode.h
-#pragma once
-
+// CardNode.h
 #ifndef CARDNODE_H
 #define CARDNODE_H
 
@@ -12,6 +11,18 @@ public:
     CardNode* next;
 
     CardNode(Card card);
+
+    // Getter for data
+    Card getData() const;
+
+    // Setter for data
+    void setData(Card card);
+
+    // Getter for next
+    CardNode* getNext() const;
+
+    // Setter for next
+    void setNext(CardNode* nextNode);
 };
 
 #endif // CARDNODE_H

@@ -19,6 +19,9 @@ public:
     void insert(Card card);
 
     void display();
+
+    CardNode* getHead() const;
+
 };
 
 #endif // CIRCULAR_LINKED_LIST_H
