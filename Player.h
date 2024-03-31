@@ -40,27 +40,19 @@ class Player{
             return playerNumber;
         }
 
-        void SetFName(string fName){
+        void SetName(string fName){
             this->fName = fName;
         }
 
-        string GetFName(){
+        string GetName(){
             return fName;
         }
 
-        void SetLName(string lName){
-            this->lName = lName;
-        }
-
-        string GetLName(){
-            return lName;
-        }
-
-        void SetGrandTotal(int grandTotal){
+        void SetScore(int grandTotal){
             this->grandTotal = grandTotal;
         }
 
-        int GetGrandTotal(){
+        int GetScore(){
             return grandTotal;
         }
         

@@ -95,7 +95,7 @@ void playGame(PlayerList& playerList) {
             wheelObj.spin();
             Card currentCard = wheelObj.getCurrentCard();
             int cardValue = currentCard.getValue();
-            currentPlayer.SetGrandTotal(cardValue);
+            currentPlayer.SetScore(cardValue);
             std::cout << "Player " << i+1 << " wins " << cardValue << " dollars!" << std::endl;
         } else {
             std::cout << "Incorrect answer." << std::endl;
