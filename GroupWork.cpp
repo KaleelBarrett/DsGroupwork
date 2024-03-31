@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Node.h"
 #include "PlayerCircularLinkedList.h"
+#include "CircularLinkedList.h"
 #include "Wheel.h"
 
 void enterPlayerNames(PlayerList& playerList) {
@@ -62,13 +63,14 @@ private:
     int choice;
 };
 
-void playGame(const std::string& category) {
+void playGame(PlayerList& playerList) {
     Category categoryObj;
     categoryObj.getCategory();
     std::string categoryString = categoryObj.getCategoryString();
 
-    int numPlayers = 3;
+    Wheel wheelObj;
 
+    Player currentPlayer;
     for (int i = 0; i < 3; i++) {
         std::ifstream file(categoryString + ".txt");
         if (!file.is_open()) {
@@ -88,13 +90,55 @@ void playGame(const std::string& category) {
 
         if (userAnswer == correctAnswer) {
             std::cout << "Correct answer!" << std::endl;
+
+            // Spin the wheel and add the value of the card to the player's grand total
+            wheelObj.spin();
+            Card currentCard = wheelObj.getCurrentCard();
+            int cardValue = currentCard.getValue();
+            currentPlayer.SetGrandTotal(cardValue);
+            std::cout << "Player " << i+1 << " wins " << cardValue << " dollars!" << std::endl;
         } else {
             std::cout << "Incorrect answer." << std::endl;
             std::cout << "Player turn ends. Moving on to the next player." << std::endl;
         }
     }
 
+    // Add the current player to the player list
+    playerList.insert(currentPlayer);
+
     std::cout << "Game over!" << std::endl;
+    std::cout << "Player grand totals: " << std::endl;
+    
+}
+
+Wheel::Wheel() : currentPosition(0) {
+    // Adding 25 cards to the wheel
+    for (int i = 0; i < 25; ++i) {
+        // Add cards according to your requirements
+        CardType type = CardType::Money;
+        int value = 500 + rand() % 2001; // Random value between 500 and 2500 for Money cards
+        wheel.insert(Card(type, value));
+    }
+}
+
+void Wheel::spin() {
+    std::uniform_int_distribution<int> dist(50, 100); // Uniform distribution between 50 and 100
+    int randomNumber = dist(rng); // Generate random number
+    currentPosition = (currentPosition + randomNumber) % 25; // Move current position
+}
+
+Card Wheel::getCurrentCard() {
+    if (wheel.isEmpty()) {
+        std::cerr << "Error: Wheel is empty!" << std::endl;
+        // Return a default card or handle the error according to your requirements
+        return Card(CardType::Money, 0); // Example of returning a default card
+    }
+
+    CardNode* current = wheel.getHead();
+    for (int i = 0; i < currentPosition; ++i) {
+        current = current->next;
+    }
+    return current->data;
 }
 
 int main(){
@@ -105,7 +149,7 @@ int main(){
     categoryObj.getCategory();
     std::string c = categoryObj.getCategoryString();
 
-    playGame(c);
+    playGame(playerList);
 
     return 0;
 }
