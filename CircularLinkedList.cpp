@@ -29,10 +29,23 @@ void CircularLinkedList::display() {
 
     CardNode* current = head;
     do {
-        std::cout << "Type: " << current->getData().getTypeString() << ", Value: " << current->getData().getValue() << std::endl;
+        std::cout << "Type: ";
+        switch (current->getData().getType()) {
+            case CardType::Money:
+                std::cout << "Money";
+                break;
+            case CardType::LoseATurn:
+                std::cout << "Lose a Turn";
+                break;
+            case CardType::Bankruptcy:
+                std::cout << "Bankruptcy";
+                break;
+        }
+        std::cout << ", Value: " << current->getData().getValue() << std::endl;
         current = current->next;
     } while (current != head);
 }
+
 
 CardNode* CircularLinkedList::getHead(){
     return head;

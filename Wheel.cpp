@@ -4,12 +4,26 @@
 Wheel::Wheel() : currentPosition(0) {
     // Adding 25 cards to the wheel
     for (int i = 0; i < 25; ++i) {
-        // Add cards according to your requirements
-        CardType type = CardType::Money;
-        int value = 500 + rand() % 2001; // Random value between 500 and 2500 for Money cards
+        CardType type;
+        int value;
+        
+        // Assign card type and value based on requirements
+        if (i % 5 == 0) {
+            type = CardType::LoseATurn;
+            value = 0; // Value of Lose a Turn card
+        } else if (i % 7 == 0 || i % 11 == 0) {
+            type = CardType::Bankruptcy;
+            value = 0; // Value of Bankruptcy card
+        } else {
+            type = CardType::Money;
+            value = 500 + rand() % 2001; // Random value between 500 and 2500 for Money cards
+        }
+
+        // Insert the card into the wheel
         wheel.insert(Card(type, value));
     }
 }
+
 
 void Wheel::spin() {
     std::uniform_int_distribution<int> dist(50, 100); // Uniform distribution between 50 and 100

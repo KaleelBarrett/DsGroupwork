@@ -1,34 +1,14 @@
-#include <iostream>
-#include <string>
+#include "header/Card.h"
 
-enum class CardType {
-    Money,
-    LoseATurn,
-    Bankruptcy
-};
+// Constructor definition
+Card::Card(CardType type, int value) : type(type), value(value) {}
 
-class Card {
-private:
-    CardType type;
-    int value;
+// Getter method for type
+CardType Card::getType() const {
+    return type;
+}
 
-public:
-    Card(CardType type, int value) : type(type), value(value) {}
-
-    CardType getType() const {
-        return type;
-    }
-
-    int getValue() const {
-        return value;
-    }
-
-    std::string getTypeString() const {
-        switch (type) {
-            case CardType::Money: return "Money";
-            case CardType::LoseATurn: return "Lose a Turn";
-            case CardType::Bankruptcy: return "Bankruptcy";
-        }
-        return "Unknown";
-    }
-};
+// Getter method for value
+int Card::getValue() const {
+    return value;
+}
