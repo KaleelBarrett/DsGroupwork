@@ -1,3 +1,6 @@
+#ifndef CARD_H
+#define CARD_H
+
 #include <iostream>
 #include <string>
 
@@ -13,22 +16,11 @@ private:
     int value;
 
 public:
-    Card(CardType type, int value) : type(type), value(value) {}
+    Card(CardType type, int value);
 
-    CardType getType() const {
-        return type;
-    }
+    CardType getType() const;
 
-    int getValue() const {
-        return value;
-    }
-
-    std::string getTypeString() const {
-        switch (type) {
-            case CardType::Money: return "Money";
-            case CardType::LoseATurn: return "Lose a Turn";
-            case CardType::Bankruptcy: return "Bankruptcy";
-        }
-        return "Unknown";
-    }
+    int getValue() const;
 };
+
+#endif // CARD_H

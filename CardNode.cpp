@@ -1,5 +1,5 @@
 // CardNode.cpp
-#include "CardNode.h"
+#include "header/CardNode.h"
 
 // Constructor
 CardNode::CardNode(Card card) : data(card), next(nullptr) {}
