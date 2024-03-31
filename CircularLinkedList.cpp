@@ -1,12 +1,8 @@
 // CircularLinkedList.cpp
-#include "CircularLinkedList.h"
+#include "header/CircularLinkedList.h"
 #include <iostream>
 
 CircularLinkedList::CircularLinkedList() : head(nullptr), tail(nullptr) {}
-
-CircularLinkedList::~CircularLinkedList() {
-    // Implement destructor to free memory if needed
-}
 
 bool CircularLinkedList::isEmpty(){
     return head == nullptr;

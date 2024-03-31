@@ -1,181 +1,155 @@
 #include <iostream>
 #include <string>
-#include "Node.h"
-#include "Player.h"
+#include <fstream>
+#include "header/Player.h"
+#include "header/Node.h"
+#include "header/PlayerCircularLinkedList.h"
+#include "header/CircularLinkedList.h"
+#include "header/Wheel.h"
 
-
-
-int main() {
-    Node* head = nullptr;
-    Node* tail = nullptr;
-
-    // Constructor declaration
-    Node(Player player) : data(player), next(nullptr) {}
-};
-
-// Define a structure to hold a node in the linked list of questions
-struct QuestionNode {
-    QuestionAnswer data;
-    QuestionNode* next;
-
-    // Constructor declaration
-    QuestionNode(QuestionAnswer question) : data(question), next(nullptr) {}
-};
-
-class Game {
-private:
-    Node* head;
-    Node* tail;
-    QuestionNode* questionHead;
-    QuestionNode* questionTail;
-
-public:
-    Game() : head(nullptr), tail(nullptr), questionHead(nullptr), questionTail(nullptr) {}
-
-    // Function to add players
-    void addPlayers() {
-        for (int i = 0; i < 4; ++i) {
-            string name;
-            cout << "Enter name for Player " << i + 1 << ": ";
-            cin.ignore(); // Clear input buffer
-            getline(cin, name);
-            Player newPlayer = { name, i + 1, 0 }; // Player number starts from 1
-            Node* newNode = new Node(newPlayer);
-            if (head == nullptr) {
-                head = newNode;
-                tail = newNode;
-            }
-            else {
-                tail->next = newNode;
-                tail = newNode;
-            }
-        }
+void enterPlayerNames(PlayerList& playerList) {
+    int playerNumber = 1;
+    for (int i = 1; i <= 3; i++) {
+        std::string firstName, lastName;
+        std::cout << "Enter player " << i << " information:\n";
+        std::cout << "First name: ";
+        std::cin >> firstName;
+        std::cout << "Last name: ";
+        std::cin >> lastName;
+        Player newPlayer(playerNumber, firstName, lastName);
+        playerList.insert(newPlayer);
+        playerNumber++;
     }
-
-    // Function to load questions and puzzles from a file
-    void loadQuestions(const string& filename) {
-        ifstream file(filename);
-        if (!file.is_open()) {
-            cerr << "Error: Could not open file " << filename << endl;
-            exit(1);
-        }
-
-        while (true) {
-            QuestionAnswer question;
-            string line;
-            if (!getline(file, line)) {
-                break;
-            }
-            if (line[0] == '#') {
-                continue;
-            }
-            istringstream iss(line);
-            string type;
-            getline(iss, type, ';');
-            getline(iss, question.prompt, ';');
-            getline(iss, question.answer, ';');
-            if (type == "Question") {
-                QuestionNode* newNode = new QuestionNode(question);
-                if (questionHead == nullptr) {
-                    questionHead = newNode;
-                    questionTail = newNode;
-                }
-                else {
-                    questionTail->next = newNode;
-                    questionTail = newNode;
-                }
-            }
-        }
-
-        file.close();
-    }
-
-    void playRound() {
-    // Seed the random number generator
-    srand(time(nullptr));
-
-    // Select a random question
-    int numQuestions = 0;
-    QuestionNode* currentQuestion = questionHead;
-    while (currentQuestion != nullptr) {
-        numQuestions++;
-        currentQuestion = currentQuestion->next;
-    }
-    int random_index = rand() % numQuestions;
-    currentQuestion = questionHead;
-    for (int i = 0; i < random_index; i++) {
-        currentQuestion = currentQuestion->next;
-    }
-
-    // Ask the question to all players
-    cout << "Question: " << currentQuestion->data.prompt << endl;
-    Node* currentPlayer = head;
-    for (int i = 0; i < 4; i++) {
-        cout << currentPlayer->data.name << ": ";
-        string answer;
-        getline(cin, answer);
-        if (answer == currentQuestion->data.answer) {
-            cout << "Correct!" << endl;
-            currentPlayer->data.total += 10;
-        }
-        else {
-            cout << "Incorrect." << endl;
-        }
-        currentPlayer = currentPlayer->next;
-    }
-
-    // Move to the next question
-    QuestionNode* temp = questionHead;
-    questionHead = questionHead->next;
-    if (questionHead == nullptr) {
-        questionTail = nullptr;
-    }
-    delete temp; // Delete QuestionNode object
 }
 
-    // Function to display player information
-    void displayInfo() {
-        cout << "\nPlayers Information:" << endl;
-        Node* current = head;
-        while (current != nullptr) {
-            Player* currentPlayer = &current->data;
-            cout << "Player " << currentPlayer->number << ": ";
-            cout << "Name: " << currentPlayer->name << ", ";
-            cout << "Total: " << currentPlayer->total << endl;
-            current = current->next;
+class Category {
+public:
+    void getCategory() {
+        std::cout << " Select from the following categories\n";
+        std::cout << "1. Person  \n";
+        std::cout << "2. Place  \n";
+        std::cout << "3. Thing  \n";
+        std::cout << "4. Phrase  \n";
+
+        std::cin >> choice;
+
+        while (choice < 1 || choice > 4) {
+            std::cout << "Invalid choice. Please choose a number between 1 and 4." << std::endl;
+            std::cin >> choice;
         }
     }
 
-    // Destructor to free memory allocated for players and questions
-    ~Game() {
-        Node* current = head;
-        while (current != nullptr) {
-            Node* temp = current;
-            current = current->next;
-            delete temp; // Delete Node object
+    std::string getCategoryString() {
+        std::string category;
+        switch (choice) {
+            case 1:
+                category = "person";
+                break;
+            case 2:
+                category = "place";
+                break;
+            case 3:
+                category = "thing";
+                break;
+            case 4:
+                category = "phrase";
+                break;
         }
-        QuestionNode* currentQuestion = questionHead;
-        while (currentQuestion != nullptr) {
-            QuestionNode* temp = currentQuestion;
-            currentQuestion = currentQuestion->next;
-            delete temp; // Delete QuestionNode object
-        }
+
+        return category;
     }
+
+private:
+    int choice;
 };
 
-int main() {
-    ofstream("questions.txt"); // Create the "questions.txt" file if it doesn't exist
-    Game game;
-    game.addPlayers();
-    game.loadQuestions("questions.txt");
+void playGame(PlayerList& playerList) {
+    Category categoryObj;
+    categoryObj.getCategory();
+    std::string categoryString = categoryObj.getCategoryString();
 
-    for (int round = 1; round <= 3; round++) {
-        cout << "Round " << round << ":" << endl;
-        game.playRound();
+    Wheel wheelObj;
+
+    Player currentPlayer;
+    for (int i = 0; i < 3; i++) {
+        std::ifstream file(categoryString + ".txt");
+        if (!file.is_open()) {
+            std::cout << "Unable to open file for category: " << categoryString << std::endl;
+            return;
+        }
+
+        std::string question;
+        std::string correctAnswer;
+        std::getline(file, question);
+        std::getline(file, correctAnswer);
+        file.close();
+
+        std::cout << question << std::endl;
+        std::string userAnswer;
+        std::getline(std::cin, userAnswer);
+
+        if (userAnswer == correctAnswer) {
+            std::cout << "Correct answer!" << std::endl;
+
+            // Spin the wheel and add the value of the card to the player's grand total
+            wheelObj.spin();
+            Card currentCard = wheelObj.getCurrentCard();
+            int cardValue = currentCard.getValue();
+            currentPlayer.SetGrandTotal(cardValue);
+            std::cout << "Player " << i+1 << " wins " << cardValue << " dollars!" << std::endl;
+        } else {
+            std::cout << "Incorrect answer." << std::endl;
+            std::cout << "Player turn ends. Moving on to the next player." << std::endl;
+        }
     }
 
-    game.displayInfo();
+    // Add the current player to the player list
+    playerList.insert(currentPlayer);
+
+    std::cout << "Game over!" << std::endl;
+    std::cout << "Player grand totals: " << std::endl;
+    
+}
+
+Wheel::Wheel() : currentPosition(0) {
+    // Adding 25 cards to the wheel
+    for (int i = 0; i < 25; ++i) {
+        // Add cards according to your requirements
+        CardType type = CardType::Money;
+        int value = 500 + rand() % 2001; // Random value between 500 and 2500 for Money cards
+        wheel.insert(Card(type, value));
+    }
+}
+
+void Wheel::spin() {
+    std::uniform_int_distribution<int> dist(50, 100); // Uniform distribution between 50 and 100
+    int randomNumber = dist(rng); // Generate random number
+    currentPosition = (currentPosition + randomNumber) % 25; // Move current position
+}
+
+Card Wheel::getCurrentCard() {
+    if (wheel.isEmpty()) {
+        std::cerr << "Error: Wheel is empty!" << std::endl;
+        // Return a default card or handle the error according to your requirements
+        return Card(CardType::Money, 0); // Example of returning a default card
+    }
+
+    CardNode* current = wheel.getHead();
+    for (int i = 0; i < currentPosition; ++i) {
+        current = current->next;
+    }
+    return current->data;
+}
+
+int main(){
+    PlayerList playerList;
+    enterPlayerNames(playerList);
+
+    Category categoryObj;
+    categoryObj.getCategory();
+    std::string c = categoryObj.getCategoryString();
+
+    playGame(playerList);
 
     return 0;
-
 }

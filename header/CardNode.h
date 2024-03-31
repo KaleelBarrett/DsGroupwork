@@ -13,13 +13,13 @@ public:
     CardNode(Card card);
 
     // Getter for data
-    Card getData() const;
+    Card getData();
 
     // Setter for data
     void setData(Card card);
 
     // Getter for next
-    CardNode* getNext() const;
+    CardNode* getNext();
 
     // Setter for next
     void setNext(CardNode* nextNode);

@@ -1,5 +1,5 @@
 // Wheel.cpp
-#include "Wheel.h"
+#include "header/Wheel.h"
 
 Wheel::Wheel() : currentPosition(0) {
     // Adding 25 cards to the wheel
