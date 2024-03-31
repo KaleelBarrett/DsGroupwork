@@ -1,6 +1,6 @@
 // main.cpp
 #include <iostream>
-#include "Wheel.cpp"
+#include "Wheel.h"
 
 
 int main() {

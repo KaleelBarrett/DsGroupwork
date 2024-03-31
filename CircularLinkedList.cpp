@@ -1,11 +1,14 @@
 // CircularLinkedList.cpp
 #include "CircularLinkedList.h"
+#include <iostream>
 
-CircularLinkedList::CircularLinkedList() : head(nullptr), tail(nullptr) {
-    
+CircularLinkedList::CircularLinkedList() : head(nullptr), tail(nullptr) {}
+
+CircularLinkedList::~CircularLinkedList() {
+    // Implement destructor to free memory if needed
 }
 
-bool CircularLinkedList::isEmpty() const {
+bool CircularLinkedList::isEmpty(){
     return head == nullptr;
 }
 
@@ -35,6 +38,6 @@ void CircularLinkedList::display() {
     } while (current != head);
 }
 
-CardNode* CircularLinkedList::getHead() const {
+CardNode* CircularLinkedList::getHead(){
     return head;
 }

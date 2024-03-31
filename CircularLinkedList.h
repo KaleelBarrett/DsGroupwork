@@ -14,14 +14,15 @@ private:
 public:
     CircularLinkedList();
 
-    bool isEmpty() const;
+    bool isEmpty();
 
     void insert(Card card);
 
     void display();
 
+
     // Getter for head
-    CardNode* getHead() const;
+    CardNode* getHead();
 };
 
 #endif // CIRCULAR_LINKED_LIST_H
