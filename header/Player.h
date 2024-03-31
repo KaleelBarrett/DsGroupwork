@@ -1,69 +1,30 @@
-#pragma once
-#include <string>
-#include <iostream>
-//
-using namespace std;
-
 #ifndef PLAYER_H
 #define PLAYER_H
 
-class Player{
+#include <string>
 
-    private:
-        int playerNumber;
-        string fName;
-        string lName;
-        int grandTotal;
-    
-    public:
+class Player {
+private:
+    int playerNumber;
+    std::string fName;
+    std::string lName;
+    int grandTotal;
 
-        Player(){
-            playerNumber = 0;
-            fName = " ";
-            lName = " ";
-            grandTotal = 0;
-        }
+public:
+    Player();
+    Player(int playerNumber, const std::string& fName, const std::string& lName);
 
-        Player(int playerNumber, string fName, string lName){
+    void setPlayerNumber(int playerNumber);
+    int getPlayerNumber() const;
 
-            this->playerNumber = playerNumber;
-            this->fName = fName;
-            this->lName = lName;
-            grandTotal = 0;
-        }
+    void setFName(const std::string& fName);
+    const std::string& getFName() const;
 
-        void SetPlayerNumber(int playerNumber){
-            this->playerNumber = playerNumber;
-        }
+    void setLName(const std::string& lName);
+    const std::string& getLName() const;
 
-        int GetPlayerNumber(){
-            return playerNumber;
-        }
-
-        void SetFName(string fName){
-            this->fName = fName;
-        }
-
-        string GetFName(){
-            return fName;
-        }
-
-        void SetLName(string lName){
-            this->lName = lName;
-        }
-
-        string GetLName(){
-            return lName;
-        }
-
-        void SetGrandTotal(int grandTotal){
-            this->grandTotal = grandTotal;
-        }
-
-        int GetGrandTotal(){
-            return grandTotal;
-        }
-        
+    void setGrandTotal(int grandTotal);
+    int getGrandTotal() const;
 };
 
-#endif
+#endif // PLAYER_H
