@@ -1,6 +1,7 @@
 // main.cpp
 #include <iostream>
-#include "Wheel.h"
+#include "Wheel.cpp"
+
 
 int main() {
     // Create a Wheel object

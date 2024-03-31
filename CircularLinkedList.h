@@ -20,9 +20,8 @@ public:
 
     void display();
 
+    // Getter for head
     CardNode* getHead() const;
-
 };
 
 #endif // CIRCULAR_LINKED_LIST_H
-

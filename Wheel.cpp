@@ -12,7 +12,9 @@ Wheel::Wheel() : currentPosition(0) {
 }
 
 void Wheel::spin() {
-    currentPosition = (currentPosition + 1) % 25;
+    std::uniform_int_distribution<int> dist(50, 100); // Uniform distribution between 50 and 100
+    int randomNumber = dist(rng); // Generate random number
+    currentPosition = (currentPosition + randomNumber) % 25; // Move current position
 }
 
 Card Wheel::getCurrentCard() {

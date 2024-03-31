@@ -1,7 +1,9 @@
 // CircularLinkedList.cpp
 #include "CircularLinkedList.h"
 
-CircularLinkedList::CircularLinkedList() : head(nullptr), tail(nullptr) {}
+CircularLinkedList::CircularLinkedList() : head(nullptr), tail(nullptr) {
+    
+}
 
 bool CircularLinkedList::isEmpty() const {
     return head == nullptr;
