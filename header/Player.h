@@ -1,3 +1,4 @@
+// Player.h
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -6,25 +7,23 @@
 class Player {
 private:
     int playerNumber;
-    std::string fName;
-    std::string lName;
-    int grandTotal;
+    std::string name;
+    int grandTotal; // Total accumulated across all rounds
+    int roundTotal; // Total accumulated for the current round
+    bool solvedRound; // Flag to indicate if the player has solved the current round
 
 public:
-    Player();
-    Player(int playerNumber, const std::string& fName, const std::string& lName);
+    Player(int playerNumber, const std::string& name);
 
-    void setPlayerNumber(int playerNumber);
+    // Getters and setters for member variables
     int getPlayerNumber() const;
-
-    void setFName(const std::string& fName);
-    const std::string& getFName() const;
-
-    void setLName(const std::string& lName);
-    const std::string& getLName() const;
-
-    void setGrandTotal(int grandTotal);
+    const std::string& getName() const;
     int getGrandTotal() const;
+    void setGrandTotal(int total);
+    int getRoundTotal() const;
+    void setRoundTotal(int total);
+    bool hasSolvedRound() const;
+    void setSolvedRound(bool solved);
 };
 
 #endif // PLAYER_H

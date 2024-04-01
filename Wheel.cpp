@@ -29,6 +29,18 @@ void Wheel::spin() {
     std::uniform_int_distribution<int> dist(50, 100); // Uniform distribution between 50 and 100
     int randomNumber = dist(rng); // Generate random number
     currentPosition = (currentPosition + randomNumber) % 25; // Move current position
+
+    // Get the current card after spinning
+    Card currentCard = getCurrentCard();
+
+    // Check if the current card is Bankruptcy or Lose A Turn
+    if (currentCard.getType() == CardType::Bankruptcy) {
+        // Handle Bankruptcy: Player loses all money accumulated for this round
+        // Implement your logic here
+    } else if (currentCard.getType() == CardType::LoseATurn) {
+        // Handle Lose A Turn: Player skips their turn
+        // Implement your logic here
+    }
 }
 
 Card Wheel::getCurrentCard() {

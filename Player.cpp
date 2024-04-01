@@ -1,38 +1,37 @@
+// Player.cpp
 #include "header/Player.h"
 
-Player::Player() : playerNumber(0), fName(" "), lName(" "), grandTotal(0) {}
-
-Player::Player(int playerNumber, const std::string& fName, const std::string& lName) 
-    : playerNumber(playerNumber), fName(fName), lName(lName), grandTotal(0) {}
-
-void Player::setPlayerNumber(int playerNumber) {
-    this->playerNumber = playerNumber;
-}
+Player::Player(int playerNumber, const std::string& name)
+    : playerNumber(playerNumber), name(name), grandTotal(0), roundTotal(0), solvedRound(false) {}
 
 int Player::getPlayerNumber() const {
     return playerNumber;
 }
 
-void Player::setFName(const std::string& fName) {
-    this->fName = fName;
-}
-
-const std::string& Player::getFName() const {
-    return fName;
-}
-
-void Player::setLName(const std::string& lName) {
-    this->lName = lName;
-}
-
-const std::string& Player::getLName() const {
-    return lName;
-}
-
-void Player::setGrandTotal(int grandTotal) {
-    this->grandTotal = grandTotal;
+const std::string& Player::getName() const {
+    return name;
 }
 
 int Player::getGrandTotal() const {
     return grandTotal;
+}
+
+void Player::setGrandTotal(int total) {
+    grandTotal = total;
+}
+
+int Player::getRoundTotal() const {
+    return roundTotal;
+}
+
+void Player::setRoundTotal(int total) {
+    roundTotal = total;
+}
+
+bool Player::hasSolvedRound() const {
+    return solvedRound;
+}
+
+void Player::setSolvedRound(bool solved) {
+    solvedRound = solved;
 }
