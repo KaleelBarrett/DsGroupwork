@@ -4,10 +4,6 @@
 
 Queue::Queue() : front(nullptr), rear(nullptr) {}
 
-Queue::~Queue() {
-    // Implement destructor to free memory
-}
-
 void Queue::enqueue(char data) {
     QueueNode* newNode = new QueueNode(data);
     if (isEmpty()) {

@@ -2,7 +2,7 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
-#include "header/QueueNode.h"
+#include "QueueNode.h"
 
 class Queue {
 private:

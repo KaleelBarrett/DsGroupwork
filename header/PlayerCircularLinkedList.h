@@ -3,8 +3,8 @@
 #ifndef PLAYERCIRCULARLINKEDLIST_H
 
 #define PLAYERCIRCULARLINKEDLIST_H
-#include "header/Player.h"
-#include "header/Node.h"
+#include "Player.h"
+#include "Node.h"
 class PlayerList{
 
     private:
