@@ -1,27 +1,30 @@
-// CircularLinkedList.h
-#pragma once
+#ifndef CIRCULARLINKEDLIST_H
+#define CIRCULARLINKEDLIST_H
 
-#ifndef CIRCULAR_LINKED_LIST_H
-#define CIRCULAR_LINKED_LIST_H
+#include <iostream>
+#include <string>
 
-#include "CardNode.h"
+struct Node {
+    std::string playerName;
+    int playerNumber;
+    int grandTotal;
+    Node* next;
 
-class CircularLinkedList {
-private:
-    CardNode* head;
-    CardNode* tail;
-
-public:
-    CircularLinkedList();
-
-    bool isEmpty() const;
-
-    void insert(Card card);
-
-    void display();
-
-    // Getter for head
-    CardNode* getHead() const;
+    Node(std::string name, int number) : playerName(name), playerNumber(number), grandTotal(0), next(nullptr) {}
 };
 
-#endif // CIRCULAR_LINKED_LIST_H
+class CircularLinkedList {
+public:
+    Node* head;
+    int count;
+
+    CircularLinkedList();
+    ~CircularLinkedList();
+
+    void insertPlayer(std::string name, int number);
+    void displayPlayers();
+    int getCount();
+    void play(const std::string& categoryFile);
+};
+
+#endif // CIRCULARLINKEDLIST_H

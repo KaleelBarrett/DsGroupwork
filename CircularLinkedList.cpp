@@ -1,40 +1,53 @@
-// CircularLinkedList.cpp
 #include "CircularLinkedList.h"
 
-CircularLinkedList::CircularLinkedList() : head(nullptr), tail(nullptr) {
-    
+CircularLinkedList::CircularLinkedList() : head(nullptr), count(0) {
+    head = nullptr;
 }
 
-bool CircularLinkedList::isEmpty() const {
-    return head == nullptr;
-}
-
-void CircularLinkedList::insert(Card card) {
-    CardNode* newNode = new CardNode(card);
-    if (isEmpty()) {
-        head = newNode;
-        tail = newNode;
-        tail->next = head; // Circular link
-    } else {
-        tail->next = newNode;
-        tail = newNode;
-        tail->next = head; // Circular link
+CircularLinkedList::~CircularLinkedList() {
+    Node* current = head;
+    Node* temp;
+    while (current != nullptr) {
+        temp = current;
+        current = current->next;
+        delete temp;
     }
+    head = nullptr;
 }
 
-void CircularLinkedList::display() {
-    if (isEmpty()) {
-        std::cout << "The list is empty." << std::endl;
+void CircularLinkedList::insertPlayer(std::string name, int number) {
+    Node* newNode = new Node(name, number);
+    if (head == nullptr) {
+        head = newNode;
+        newNode->next = head;
+    } else {
+        Node* temp = head;
+        while (temp->next != head) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        newNode->next = head;
+    }
+    count++;
+}
+
+void CircularLinkedList::displayPlayers() {
+    if (head == nullptr) {
+        std::cout << "No players in the list!" << std::endl;
         return;
     }
 
-    CardNode* current = head;
+    Node* temp = head;
     do {
-        std::cout << "Type: " << current->getData().getTypeString() << ", Value: " << current->getData().getValue() << std::endl;
-        current = current->next;
-    } while (current != head);
+        std::cout << "Player Name: " << temp->playerName << ", Player Number: " << temp->playerNumber << ", Grand Total: $" << temp->grandTotal << std::endl;
+        temp = temp->next;
+    } while (temp != head);
 }
 
-CardNode* CircularLinkedList::getHead() const {
-    return head;
+int CircularLinkedList::getCount() {
+    return count;
+}
+
+void CircularLinkedList::play(const std::string& categoryFile) {
+    // Your code here
 }
