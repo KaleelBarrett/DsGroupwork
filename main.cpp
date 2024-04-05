@@ -50,6 +50,7 @@ void playGame(CircularLinkedList& playersList) {
     std::cout << "2. Place"  << std::endl;
     std::cout << "3. Thing"  << std::endl;
     std::cout << "4. Phrase"  << std::endl;
+    std::cout << "5. End game" << std::endl;
 
     std::cin >> choice;
     
@@ -72,6 +73,9 @@ void playGame(CircularLinkedList& playersList) {
         case 4:
             filename = "phrase.txt";
             break;
+
+        case 5:
+            return;
 
         default:
             std::cout << "Invalid choice." << std::endl;
@@ -107,6 +111,7 @@ void playGame(CircularLinkedList& playersList) {
 
     if (userAnswerLower == correctAnswerLower) {
         std::cout << "Correct answer!" << std::endl;
+
     } else {
         std::cout << "Incorrect answer." << std::endl;
     }
