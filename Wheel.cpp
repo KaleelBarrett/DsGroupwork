@@ -32,15 +32,6 @@ void Wheel::spin() {
 
     // Get the current card after spinning
     Card currentCard = getCurrentCard();
-
-    // Check if the current card is Bankruptcy or Lose A Turn
-    if (currentCard.getType() == CardType::Bankruptcy) {
-        // Handle Bankruptcy: Player loses all money accumulated for this round
-        // Implement your logic here
-    } else if (currentCard.getType() == CardType::LoseATurn) {
-        // Handle Lose A Turn: Player skips their turn
-        // Implement your logic here
-    }
 }
 
 Card Wheel::getCurrentCard() {

@@ -1,49 +1,30 @@
-#pragma once
-
 #ifndef PLAYERCIRCULARLINKEDLIST_H
-
 #define PLAYERCIRCULARLINKEDLIST_H
-#include "Player.h"
-#include "Node.h"
-class PlayerList{
 
-    private:
-        Node* head;
-        Node* tail;
+#include <iostream>
+#include <string>
 
-    public:
+struct Node {
+    std::string playerName;
+    int playerNumber;
+    int grandTotal;
+    Node* next;
 
-        PlayerList(){
-            head = NULL;
-            tail = NULL;
-        }
-
-        bool isEmpty(){
-            if(head == NULL){
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-
-        void insert(Player data){
-
-            Node* temp = new Node(data);
-
-            if(isEmpty()){
-                head = temp;
-                tail = temp;
-                tail->setNextNode(head);
-            }
-            else{
-                tail->setNextNode(temp);
-                tail = temp;
-                tail->setNextNode(head);
-            }
-
-        }
-
+    Node(std::string name, int number) : playerName(name), playerNumber(number), grandTotal(0), next(nullptr) {}
 };
 
-#endif
+class PlayerCircularLinkedList {
+public:
+    Node* head;
+    int count;
+
+    PlayerCircularLinkedList();
+    ~PlayerCircularLinkedList();
+
+    void insertPlayer(std::string name, int number);
+    void displayPlayers();
+    int getCount();
+    void play(const std::string& categoryFile);
+};
+
+#endif // PLAYERCIRCULARLINKEDLIST_H

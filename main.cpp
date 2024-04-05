@@ -1,63 +1,172 @@
-#include "header/Player.h"
-#include "header/Wheel.h"
 #include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include "header/PlayerCircularLinkedList.h"
+#include "header/Wheel.h"
+#include <limits> // Include the <limits> header for numeric_limits
+#include <algorithm> // For std::transform
 #include <vector>
+#include <string>
+#include <cstdlib> // For rand() and srand()
+#include <ctime>   // For time()
 
-int main() {
-    // Initialize players
-    std::vector<Player> players;
-    players.push_back(Player(1, "Player 1"));
-    players.push_back(Player(2, "Player 2"));
-    // Add more players if needed
 
-    // Initialize wheel
-    Wheel wheel;
 
-    // Main game loop
-    int currentRound = 1;
-    const int totalRounds = 3;
-    while (currentRound <= totalRounds) {
-        std::cout << "Round " << currentRound << std::endl;
 
-        // Iterate through each player's turn
-        for (Player& player : players) {
-            std::cout << "Current player: " << player.getName() << std::endl;
+void clearInputBuffer() {
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 
-            // Spin the wheel
-            wheel.spin();
+// Function to convert string to lowercase
+std::string toLowercase(const std::string& str) {
+    std::string lower = str;
+    std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+    return lower;
+}
 
-            // Display the wheel result
-            Card currentCard = wheel.getCurrentCard();
-            std::cout << "Current wheel card: Type - " << static_cast<int>(currentCard.getType())
-                      << ", Value - " << currentCard.getValue() << std::endl;
 
-            // Your game logic for handling player's turn goes here
-            // Allow the player to guess a letter, solve the puzzle, etc.
+// Function to play the game
+void playGame(PlayerCircularLinkedList& playersList,Wheel& wheel) {
 
-            // Update player's round total based on outcome
-            // player.setRoundTotal(player.getRoundTotal() + ...);
+    // Play 3 rounds
+    for (int round = 1; round <= 3; ++round) {
+        std::cout << "\nRound " << round << ":\n";
 
-            // Check if the player has solved the puzzle
-            // if (player.hasSolvedPuzzle()) { ... }
+        Node* currentPlayer = playersList.head;
+        do {
+            std::cout << "\nCurrent Player: " << currentPlayer->playerName << std::endl;
 
-            // Handle special wheel tiles (Bankrupt, Lose A Turn)
-            // if (currentCard.getType() == CardType::Bankruptcy) { ... }
-            // else if (currentCard.getType() == CardType::LoseATurn) { ... }
+     std::string filename;
+    std::ifstream file;
+    std::string question;
+    std::string correctAnswer;
+    std::string userAnswer;
 
-            // Move to the next player
-        }
+    int choice = 1;
 
-        // Display round results and update grand totals
-        // Your code for displaying round results and updating grand totals goes here
+    std::cout << "Select from the following categories:" << std::endl;
+    std::cout << "1. Person"  << std::endl;
+    std::cout << "2. Place"  << std::endl;
+    std::cout << "3. Thing"  << std::endl;
+    std::cout << "4. Phrase"  << std::endl;
 
-        // Check if the game should continue
-        // if (gameShouldContinue()) { ... }
+    std::cin >> choice;
+    
+    // Clear input buffer
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        currentRound++;
+    switch (choice) {
+        case 1:
+            filename = "person.txt";
+            break;
+
+        case 2:
+            filename = "place.txt";
+            break;
+
+        case 3:
+            filename = "thing.txt";
+            break;
+
+        case 4:
+            filename = "phrase.txt";
+            break;
+
+        default:
+            std::cout << "Invalid choice." << std::endl;
+            return ;
     }
 
-    // End of game
-    // Your code for determining the winner and displaying final results goes here
+    file.open(filename);
+    if (!file.is_open()) {
+        std::cout << "Unable to open file: " << filename << std::endl;
+        return ;
+    }
+
+    std::vector<std::string> questions;
+    while (std::getline(file, question)) {
+        std::getline(file, correctAnswer); // Read the corresponding answer (assuming questions and answers are stored alternately)
+        questions.push_back(question);
+    }
+    file.close();
+
+    // Seed the random number generator
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    // Randomly select a question
+    int randomIndex = std::rand() % questions.size();
+    question = questions[randomIndex];
+
+    std::cout << question << std::endl;
+    std::getline(std::cin, userAnswer);
+
+    // Convert user's answer and correct answer to lowercase
+    std::string userAnswerLower = toLowercase(userAnswer);
+    std::string correctAnswerLower = toLowercase(correctAnswer);
+
+    if (userAnswerLower == correctAnswerLower) {
+        std::cout << "Correct answer!" << std::endl;
+        wheel.spin();
+
+        Card currentCard = wheel.getCurrentCard();
+        // Display the current card
+        std::cout << "Current Card: Type - ";
+        switch (currentCard.getType()) {
+            case CardType::Money:
+                std::cout << "Money";
+                break;
+            case CardType::LoseATurn:
+                std::cout << "Lose a Turn";
+                break;
+            case CardType::Bankruptcy:
+                std::cout << "Bankruptcy";
+                break;
+                
+        }
+        std::cout << ", Value - " << currentCard.getValue() << std::endl;
+
+        // If the current card is Money, add its value to the player's round total
+        if (currentCard.getType() == CardType::Money) {
+            currentPlayer->grandTotal += currentCard.getValue();
+            std::cout << "Player " << currentPlayer->playerName << " earned $" << currentCard.getValue() << std::endl;
+        }
+    } else {
+        std::cout << "Incorrect answer." << std::endl;
+    }
+
+            currentPlayer = currentPlayer->next;
+        } while (currentPlayer != playersList.head);
+    }
+}
+
+class Player {
+public:
+    std::string playerName;
+    int playerNumber;
+    int grandTotal;
+};
+
+int main() {
+    PlayerCircularLinkedList playersList;
+    std::string name;
+    int playerNumber = 1;
+
+    // Allow up to three players to enter their names and assign player numbers
+    for (int i = 0; i < 3; ++i) {
+        std::cout << "Enter player " << (i + 1) << "'s name: ";
+        std::getline(std::cin, name);
+        playersList.insertPlayer(name, playerNumber++);
+    }
+
+    // Display the list of players
+    std::cout << "\nList of Players:\n";
+    playersList.displayPlayers();
+
+    Wheel wheel;
+    // Play the game
+    playGame(playersList,wheel);
 
     return 0;
 }
