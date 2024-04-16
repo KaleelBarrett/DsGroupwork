@@ -39,11 +39,12 @@ Card Wheel::getCurrentCard() {
         std::cerr << "Error: Wheel is empty!" << std::endl;
         // Return a default card or handle the error according to your requirements
         return Card(CardType::Money, 0); // Example of returning a default card
+    }else
+    {
+        CardNode* current = wheel.getHead();
+        for (int i = 0; i < currentPosition; ++i) {
+            current = current->next;
+        }
+        return current->data;
     }
-
-    CardNode* current = wheel.getHead();
-    for (int i = 0; i < currentPosition; ++i) {
-        current = current->next;
-    }
-    return current->data;
 }
