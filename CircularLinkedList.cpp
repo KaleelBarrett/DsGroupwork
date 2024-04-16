@@ -1,53 +1,52 @@
-#include "CircularLinkedList.h"
+// CircularLinkedList.cpp
+#include "header/CircularLinkedList.h"
+#include <iostream>
 
-CircularLinkedList::CircularLinkedList() : head(nullptr), count(0) {
-    head = nullptr;
+CircularLinkedList::CircularLinkedList() : head(nullptr), tail(nullptr) {}
+
+bool CircularLinkedList::isEmpty(){
+    return head == nullptr;
 }
 
-CircularLinkedList::~CircularLinkedList() {
-    Node* current = head;
-    Node* temp;
-    while (current != nullptr) {
-        temp = current;
-        current = current->next;
-        delete temp;
-    }
-    head = nullptr;
-}
-
-void CircularLinkedList::insertPlayer(std::string name, int number) {
-    Node* newNode = new Node(name, number);
-    if (head == nullptr) {
+void CircularLinkedList::insert(Card card) {
+    CardNode* newNode = new CardNode(card);
+    if (isEmpty()) {
         head = newNode;
-        newNode->next = head;
+        tail = newNode;
+        tail->next = head; // Circular link
     } else {
-        Node* temp = head;
-        while (temp->next != head) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
-        newNode->next = head;
+        tail->next = newNode;
+        tail = newNode;
+        tail->next = head; // Circular link
     }
-    count++;
 }
 
-void CircularLinkedList::displayPlayers() {
-    if (head == nullptr) {
-        std::cout << "No players in the list!" << std::endl;
+void CircularLinkedList::display() {
+    if (isEmpty()) {
+        std::cout << "The list is empty." << std::endl;
         return;
     }
 
-    Node* temp = head;
+    CardNode* current = head;
     do {
-        std::cout << "Player Name: " << temp->playerName << ", Player Number: " << temp->playerNumber << ", Grand Total: $" << temp->grandTotal << std::endl;
-        temp = temp->next;
-    } while (temp != head);
+        std::cout << "Type: ";
+        switch (current->getData().getType()) {
+            case CardType::Money:
+                std::cout << "Money";
+                break;
+            case CardType::LoseATurn:
+                std::cout << "Lose a Turn";
+                break;
+            case CardType::Bankruptcy:
+                std::cout << "Bankruptcy";
+                break;
+        }
+        std::cout << ", Value: " << current->getData().getValue() << std::endl;
+        current = current->next;
+    } while (current != head);
 }
 
-int CircularLinkedList::getCount() {
-    return count;
-}
 
-void CircularLinkedList::play(const std::string& categoryFile) {
-    // Your code here
+CardNode* CircularLinkedList::getHead(){
+    return head;
 }

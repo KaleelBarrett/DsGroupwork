@@ -1,21 +1,19 @@
 #include <iostream>
 #include <fstream>
-#include <queue>
+#include <cstdlib>
+#include <ctime>
+#include "header/PlayerCircularLinkedList.h"
+#include "header/Wheel.h"
+#include <limits> // Include the <limits> header for numeric_limits
+#include <algorithm> // For std::transform
 #include <vector>
 #include <string>
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time()
-#include <limits> // Include the <limits> header for numeric_limits
-#include <algorithm> // For std::transform
-#include "CircularLinkedList.h" // Assuming CircularLinkedList.h contains the declaration of CircularLinkedList
 
-// Define a structure for each card in the puzzle game
-struct Card {
-    char letter;
-    int moneyValue;
-};
 
-// Function to clear input buffer
+
+
 void clearInputBuffer() {
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -28,105 +26,37 @@ std::string toLowercase(const std::string& str) {
     return lower;
 }
 
-// Function to play the puzzle game
-int playPuzzleGame(const std::string& fileName, int& totalScore) {
-    if (totalScore < 250) {
-        std::cout << "Sorry, you need at least 250 points to play the puzzle game." << std::endl;
-        return 0; // Return 0 indicating puzzle not played
-    }
+// function to play game 
+void playGame(PlayerCircularLinkedList& playersList, Wheel& wheel) {
 
-    // Initialize necessary variables
-    std::queue<char> letterQueue;
-    std::vector<Card> cards;
-    std::string puzzle;
-    int roundTotal = 0;
-
-    // Open the file containing puzzle data
-    std::ifstream file(fileName);
-    if (!file.is_open()) {
-        std::cerr << "Error opening the file." << std::endl;
-        return -1; // Return -1 indicating error
-    }
-
-    // Read data from file and populate letterQueue, puzzle, and cards
-    char letter;
-    int moneyValue;
-    while (file >> letter >> moneyValue) {
-        letterQueue.push(letter);
-        puzzle.push_back(letter);
-        cards.push_back({letter, moneyValue});
-    }
-    file.close();
-
-    // Main loop for playing the puzzle game
-    while (!letterQueue.empty()) {
-        std::cout << "Enter a letter of the puzzle: ";
-        std::cin >> letter;
-
-        bool isLetterInPuzzle = false;
-        int occurrences = 0;
-
-        // Check if entered letter exists in the puzzle
-        for (size_t i = 0; i < puzzle.length(); ++i) {
-            if (puzzle[i] == letter) {
-                isLetterInPuzzle = true;
-                ++occurrences;
-                puzzle[i] = '_';
-                roundTotal += cards[i].moneyValue;
-            }
-        }
-
-        // Display result of letter search
-        if (isLetterInPuzzle) {
-            std::cout << "Letter found! It appears " << occurrences << " times in the puzzle." << std::endl;
-            std::cout << "Your round total is now: " << (totalScore += roundTotal) << std::endl;
-        } else {
-            std::cout << "Letter not found." << std::endl;
-        }
-
-        letterQueue.pop();
-    }
-
-    return roundTotal; // Return round total
-}
-
-// Function to play the main game
-void playGame(CircularLinkedList& playersList ) {
     // Play 3 rounds
     for (int round = 1; round <= 3; ++round) {
         std::cout << "\nRound " << round << ":\n";
 
-        // Iterate through players in the circular linked list
         Node* currentPlayer = playersList.head;
         do {
             std::cout << "\nCurrent Player: " << currentPlayer->playerName << std::endl;
 
-            // Get player's total score
-            int totalScore = currentPlayer->grandTotal;
-            std::cout << "Player's Grand Total: " << totalScore << std::endl;
-
-            // Initialize variables for file I/O and quiz questions
             std::string filename;
             std::ifstream file;
             std::string question;
             std::string correctAnswer;
             std::string userAnswer;
 
-            // Display menu to select category
             int choice = 1;
+
             std::cout << "Select from the following categories:" << std::endl;
             std::cout << "1. Person"  << std::endl;
             std::cout << "2. Place"  << std::endl;
             std::cout << "3. Thing"  << std::endl;
             std::cout << "4. Phrase"  << std::endl;
-            std::cout << "5. End game" << std::endl;
+
             std::cin >> choice;
 
             // Clear input buffer
-            clearInputBuffer();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             switch (choice) {
-                // Set filename based on user choice
                 case 1:
                     filename = "person.txt";
                     break;
@@ -143,78 +73,101 @@ void playGame(CircularLinkedList& playersList ) {
                     filename = "phrase.txt";
                     break;
 
-                case 5:
-                    return;
-
                 default:
                     std::cout << "Invalid choice." << std::endl;
                     return;
             }
 
-            // Prompt user to attempt puzzle or answer quiz question
-            std::cout << "Would you like to attempt a puzzle? (yes/no): ";
-            std::string attemptPuzzle;
-            std::cin >> attemptPuzzle;
-            clearInputBuffer();
-
-            if (toLowercase(attemptPuzzle) == "yes") {
-                // Play puzzle game
-                std::string puzzleFileName = "puzzle.txt";
-                int puzzleTotal = playPuzzleGame(puzzleFileName, totalScore);
-                if (puzzleTotal != -1) {
-                    totalScore += puzzleTotal;
-                } else {
-                    std::cout << "Puzzle game couldn't be played. Error occurred." << std::endl;
-                }
-            } else {
-                // Load and display quiz question
-                file.open(filename);
-                if (!file.is_open()) {
-                    std::cout << "Unable to open file: " << filename << std::endl;
-                    return;
-                }
-
-                // Read questions and answers from file
-                std::vector<std::string> questions;
-                while (std::getline(file, question)) {
-                    std::getline(file, correctAnswer); // Read the corresponding answer (assuming questions and answers are stored alternately)
-                    questions.push_back(question);
-                }
-                file.close();
-
-                // Seed the random number generator
-                std::srand(static_cast<unsigned int>(std::time(nullptr)));
-
-                // Randomly select a question
-                int randomIndex = std::rand() % questions.size();
-                question = questions[randomIndex];
-
-                // Ask user for answer
-                std::cout << question << std::endl;
-                std::getline(std::cin, userAnswer);
-
-                // Convert user's answer and correct answer to lowercase
-                std::string userAnswerLower = toLowercase(userAnswer);
-                std::string correctAnswerLower = toLowercase(correctAnswer);
-
-                // Check if answer is correct
-                if (userAnswerLower == correctAnswerLower) {
-                    std::cout << "Correct answer!" << std::endl;
-                } else {
-                    std::cout << "Incorrect answer." << std::endl;
-                }
+            file.open(filename);
+            if (!file.is_open()) {
+                std::cout << "Unable to open file: " << filename << std::endl;
+                return;
             }
 
-            // Display player's total score after the round
-            std::cout << "Player's Grand Total after Round " << round << ": " << (currentPlayer->grandTotal = totalScore) << std::endl;
+            std::vector<std::string> questions;
+            while (std::getline(file, question)) {
+                std::getline(file, correctAnswer); // Read the corresponding answer (assuming questions and answers are stored alternately)
+                questions.push_back(question);
+            }
+            file.close();
 
-            // Move to the next player
+            // Seed the random number generator
+            std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+            // Randomly select a question
+            int randomIndex = std::rand() % questions.size();
+            question = questions[randomIndex];
+
+            std::cout << question << std::endl;
+            std::getline(std::cin, userAnswer);
+
+            // Convert user's answer and correct answer to lowercase
+            std::string userAnswerLower = toLowercase(userAnswer);
+            std::string correctAnswerLower = toLowercase(correctAnswer);
+
+            if (userAnswerLower == correctAnswerLower) {
+                std::cout << "Correct answer!" << std::endl;
+                wheel.spin();
+
+                Card currentCard = wheel.getCurrentCard();
+                // Display the current card
+                std::cout << "Current Card: Type - ";
+                switch (currentCard.getType()) {
+                    case CardType::Money:
+                        std::cout << "Money";
+                        break;
+                    case CardType::LoseATurn:
+                        std::cout << "Lose a Turn";
+                        break;
+                    case CardType::Bankruptcy:
+                        std::cout << "Bankruptcy";
+                        break;
+
+                }
+                std::cout << ", Value - " << currentCard.getValue() << std::endl;
+
+                // If the current card is Money, add its value to the player's round total
+                if (currentCard.getType() == CardType::Money) {
+                    currentPlayer->grandTotal += currentCard.getValue();
+                    std::cout << "Player " << currentPlayer->playerName << " earned $" << currentCard.getValue() << std::endl;
+                }
+            } else {
+                std::cout << "Incorrect answer." << std::endl;
+            }
+
+            std::cout << "Player's Grand Total after Round " << round << ": " << currentPlayer->grandTotal << std::endl;
+
             currentPlayer = currentPlayer->next;
         } while (currentPlayer != playersList.head);
     }
-}
 
-// Player class representing a player in the game
+     // Determine the winner
+    Node* winner = playersList.head;
+    int maxGrandTotal = winner->grandTotal;
+    Node* previousWinner = nullptr;
+
+    Node* currentPlayer = playersList.head;
+    do {
+        if (currentPlayer->grandTotal > maxGrandTotal) {
+            maxGrandTotal = currentPlayer->grandTotal;
+            winner = currentPlayer;
+            previousWinner = nullptr;
+        } else if (currentPlayer->grandTotal == maxGrandTotal) {
+            if (previousWinner == nullptr) {
+                previousWinner = currentPlayer->previous;
+            }
+        }
+
+        currentPlayer = currentPlayer->next;
+    } while (currentPlayer != playersList.head);
+
+    // Display the winner
+    if (previousWinner != nullptr) {
+        std::cout << "The game is a tie between " << winner->playerName << " and " << previousWinner->playerName << " with a grand total of $" << maxGrandTotal << " each." << std::endl;
+    } else {
+        std::cout << "The winner is " << winner->playerName << " with a grand total of $" << maxGrandTotal << "." << std::endl;
+    }
+}
 class Player {
 public:
     std::string playerName;
@@ -222,9 +175,8 @@ public:
     int grandTotal;
 };
 
-// Main function
 int main() {
-    CircularLinkedList playersList;
+    PlayerCircularLinkedList playersList;
     std::string name;
     int playerNumber = 1;
 
@@ -239,12 +191,9 @@ int main() {
     std::cout << "\nList of Players:\n";
     playersList.displayPlayers();
 
+    Wheel wheel;
     // Play the game
-    playGame(playersList);
-
-    // Display the list of players with their final scores
-    std::cout << "\nList of Players:\n";
-    playersList.displayPlayers();
+    playGame(playersList,wheel);
 
     return 0;
 }
