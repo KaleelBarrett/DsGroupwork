@@ -4,7 +4,7 @@
 #ifndef CIRCULAR_LINKED_LIST_H
 #define CIRCULAR_LINKED_LIST_H
 
-#include "CardNode.h"
+#include "header/CardNode.h"
 
 class CircularLinkedList {
 private:
